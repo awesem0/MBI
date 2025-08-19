@@ -215,6 +215,19 @@
       margin-bottom: 10px;
       max-width: 772.98px;
     }
+    .video-tutorial {
+      margin: 20px 0;
+      text-align: center;
+      max-width: 902.9px;
+      width: 100%;
+      position: relative;
+    }
+    .video-tutorial iframe {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+    }
     @media (max-width: 740px) {
       .main-container {
         align-items: center;
@@ -318,10 +331,16 @@
       .disclaimer {
         font-size: 12px;
       }
+      .video-tutorial iframe {
+        width: 100%;
+        height: auto;
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+      }
     }
     @media (max-width: 772.98px) and (min-width: 741px) {
       .top-buttons {
-        flex的方向: column;
+        flex-direction: column;
         align-items: center;
       }
     }
@@ -330,10 +349,10 @@
 <body>
   <div class="main-container">
     <div class="disclaimer">
-      This is a fun badge creator tool for personal use only. We do not store your data.
+      This is a fictional graphic tool for fun only. No data is stored.
     </div>
     <div class="top-buttons">
-      <a href="https://www.etsy.com/uk/listing/1804162176/personalised-mib-special-agent-men-in" target="_blank" class="button" id="buy-template">BUY TEMPLATE</a>
+      <a href="https://www.etsy.com/uk/listing/1816298681/editable-mib-agent-badge-free-edit-tool" target="_blank" class="button" id="buy-template">BUY TEMPLATE</a>
       <a href="https://www.pixelcut.ai/t/background-remover" target="_blank" class="button" id="remove-bg">REMOVE PHOTO BACKGROUND</a>
       <div class="upload-container">
         <label for="templateUpload" class="upload-button" id="upload-template-label">UPLOAD TEMPLATE</label>
@@ -408,6 +427,9 @@
         </div>
       </div>
     </div>
+    <div class="video-tutorial">
+      <iframe width="720" height="405" src="https://www.youtube.com/embed/vZ5r4AxQEms?si=9K0S7m5f2Yx0j0x0&vq=hd720" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
   </div>
   <script>
     let templateImg, photoImg, glassesImgs = [], currentGlassesImg;
@@ -433,24 +455,20 @@
     ];
     const loadingMessage = document.getElementById('loading-message');
     let canvas;
-
     let isDraggingPhoto = false;
     let photoDragStartX, photoDragStartY;
     let isPinchingPhoto = false;
     let initialPinchDistancePhoto = 0;
     let initialScalePhoto = 1;
-
     let isDraggingGlasses = false;
     let glassesDragStartX, glassesDragStartY;
     let isPinchingGlasses = false;
     let initialPinchDistanceGlasses = 0;
     let initialScaleGlasses = 1;
-
     let lastUploadTrigger = { template: 0, photo: 0 };
-
     function preload() {
       glassesUrls.forEach((url, index) => {
-        loadImage(url, 
+        loadImage(url,
           (img) => {
             glassesImgs[index] = img;
             document.getElementById(`glasses${index + 1}`).style.backgroundImage = `url('${url}')`;
@@ -461,7 +479,6 @@
         );
       });
     }
-
     function setup() {
       canvas = createCanvas(canvasWidth, canvasHeight);
       canvas.parent('canvas-container');
@@ -473,7 +490,6 @@
       updateCanvasSize();
       updateSliderVisibility();
     }
-
     function updateCanvasSize() {
       const container = document.getElementById('canvas-container');
       const containerWidth = container.offsetWidth;
@@ -491,7 +507,6 @@
       }
       updateSliderRanges();
     }
-
     function updateSliderRanges() {
       const xMax = canvasWidth / 2;
       const yMax = canvasHeight / 2;
@@ -504,7 +519,6 @@
       document.getElementById('glassesYPos').setAttribute('min', -yMax);
       document.getElementById('glassesYPos').setAttribute('max', yMax);
     }
-
     function updateSliderVisibility() {
       const photoSliders = document.querySelector('#photo-sliders');
       const glassesSliders = document.querySelector('#glasses-sliders');
@@ -520,7 +534,6 @@
         btn.style.opacity = '1';
       });
     }
-
     function isMouseOverPhoto(x, y) {
       if (!photoLoaded || !photoImg) return false;
       let scaledHeight = photoImg.height * scaleVal;
@@ -532,7 +545,6 @@
       let photoY = yPos + canvasHeight / 2 - paddedHeight / 2;
       return x >= photoX && x <= photoX + paddedWidth && y >= photoY && y <= photoY + paddedHeight;
     }
-
     function isMouseOverGlasses(x, y) {
       if (!glassesSelected || !currentGlassesImg || hasDownloaded) return false;
       let scaledWidth = currentGlassesImg.width * glassesScaleVal;
@@ -544,7 +556,6 @@
       let glassesY = glassesYPos + canvasHeight / 2 - paddedHeight / 2;
       return x >= glassesX && x <= glassesX + paddedWidth && y >= glassesY && y <= glassesY + paddedHeight;
     }
-
     function isTouchOverButton(x, y) {
       const buttons = document.querySelectorAll('button, a.button, label.upload-button');
       for (let btn of buttons) {
@@ -555,7 +566,6 @@
       }
       return false;
     }
-
     function isTouchOverSlider(x, y) {
       const sliders = document.querySelectorAll('input[type="range"]');
       for (let slider of sliders) {
@@ -568,13 +578,11 @@
       }
       return false;
     }
-
     function isTouchOverCanvas(x, y) {
       const canvasContainer = document.getElementById('canvas-container');
       const rect = canvasContainer.getBoundingClientRect();
       return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
     }
-
     function isTouchOverControls(x, y) {
       const controls = document.querySelector('.controls');
       const rect = controls.getBoundingClientRect();
@@ -586,7 +594,6 @@
       }
       return false;
     }
-
     function mousePressed() {
       if (activeElement === 'photo' && photoLoaded && isMouseOverPhoto(mouseX, mouseY)) {
         isDraggingPhoto = true;
@@ -599,18 +606,17 @@
         hasDownloaded = false;
       }
     }
-
     function mouseReleased() {
       isDraggingPhoto = false;
       isDraggingGlasses = false;
     }
-
     function mouseDragged() {
       if (isDraggingPhoto && activeElement === 'photo') {
         xPos = mouseX - photoDragStartX;
         yPos = mouseY - photoDragStartY;
         document.getElementById('xPos').value = xPos;
         document.getElementById('yPos').value = yPos;
+        hasDownloaded = false;
       } else if (isDraggingGlasses && activeElement === 'glasses' && !hasDownloaded) {
         glassesXPos = mouseX - glassesDragStartX;
         glassesYPos = mouseY - glassesDragStartY;
@@ -619,7 +625,6 @@
         hasDownloaded = false;
       }
     }
-
     function touchStarted(event) {
       if (touches.length === 1) {
         let touchX = touches[0].x;
@@ -673,38 +678,6 @@
       }
       return false;
     }
-
-    function touchMoved() {
-      if (touches.length === 1 && isDraggingPhoto && activeElement === 'photo') {
-        xPos = touches[0].x - photoDragStartX;
-        yPos = touches[0].y - photoDragStartY;
-        document.getElementById('xPos').value = xPos;
-        document.getElementById('yPos').value = yPos;
-        return false;
-      } else if (touches.length === 1 && isDraggingGlasses && activeElement === 'glasses' && !hasDownloaded) {
-        glassesXPos = touches[0].x - glassesDragStartX;
-        glassesYPos = touches[0].y - glassesDragStartY;
-        document.getElementById('glassesXPos').value = glassesXPos;
-        document.getElementById('glassesYPos').value = glassesYPos;
-        hasDownloaded = false;
-        return false;
-      } else if (touches.length === 2 && isPinchingPhoto && activeElement === 'photo') {
-        let currentDistance = dist(touches[0].x, touches[0].y, touches[1].x, touches[1].y);
-        let scaleFactor = currentDistance / initialPinchDistancePhoto;
-        scaleVal = constrain(initialScalePhoto * scaleFactor, 0.1, 2);
-        document.getElementById('scale').value = scaleVal;
-        return false;
-      } else if (touches.length === 2 && isPinchingGlasses && activeElement === 'glasses' && !hasDownloaded) {
-        let currentDistance = dist(touches[0].x, touches[0].y, touches[1].x, touches[1].y);
-        let scaleFactor = currentDistance / initialPinchDistanceGlasses;
-        glassesScaleVal = constrain(initialScaleGlasses * scaleFactor, 0.1, 2.5);
-        document.getElementById('glassesScale').value = glassesScaleVal;
-        hasDownloaded = false;
-        return false;
-      }
-      return false;
-    }
-
     function touchEnded(event) {
       isDraggingPhoto = false;
       isPinchingPhoto = false;
@@ -736,7 +709,6 @@
       }
       return false;
     }
-
     function draw() {
       clear();
       if (templateLoaded && templateImg) {
@@ -786,7 +758,6 @@
         }
       }
     }
-
     function validateFile(file, type) {
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       const maxSizeMB = 5;
@@ -798,7 +769,6 @@
       }
       return null;
     }
-
     document.addEventListener('DOMContentLoaded', () => {
       const templateUpload = document.getElementById('templateUpload');
       const photoUpload = document.getElementById('photoUpload');
@@ -817,12 +787,10 @@
       const removeBgButton = document.getElementById('remove-bg');
       const uploadTemplateLabel = document.getElementById('upload-template-label');
       const uploadPhotoLabel = document.getElementById('upload-photo-label');
-
       buyTemplateButton.addEventListener('click', () => {});
       removeBgButton.addEventListener('click', () => {});
       uploadTemplateLabel.addEventListener('click', () => {});
       uploadPhotoLabel.addEventListener('click', () => {});
-
       if (templateUpload) {
         templateUpload.addEventListener('change', (e) => {
           const file = e.target.files[0];
@@ -905,7 +873,6 @@
           }
         });
       }
-
       if (photoUpload) {
         photoUpload.addEventListener('change', (e) => {
           const file = e.target.files[0];
@@ -963,7 +930,6 @@
           }
         });
       }
-
       function selectGlasses(index) {
         document.querySelectorAll('.glasses-button').forEach(btn => btn.classList.remove('selected'));
         document.getElementById(`glasses${index + 1}`).classList.add('selected');
@@ -973,13 +939,11 @@
         updateCanvasSize();
         updateSliderVisibility();
       }
-
       glassesUrls.forEach((_, index) => {
         document.getElementById(`glasses${index + 1}`).addEventListener('click', () => {
           selectGlasses(index);
         });
       });
-
       if (xPosSlider) {
         xPosSlider.addEventListener('input', (e) => {
           if (activeElement === 'photo') {
@@ -991,7 +955,6 @@
           e.stopPropagation();
         });
       }
-
       if (yPosSlider) {
         yPosSlider.addEventListener('input', (e) => {
           if (activeElement === 'photo') {
@@ -1003,7 +966,6 @@
           e.stopPropagation();
         });
       }
-
       if (scaleSlider) {
         scaleSlider.addEventListener('input', (e) => {
           if (activeElement === 'photo') {
@@ -1015,7 +977,6 @@
           e.stopPropagation();
         });
       }
-
       if (rotationSlider) {
         rotationSlider.addEventListener('input', (e) => {
           if (activeElement === 'photo') {
@@ -1027,7 +988,6 @@
           e.stopPropagation();
         });
       }
-
       if (glassesXPosSlider) {
         glassesXPosSlider.addEventListener('input', (e) => {
           if (activeElement === 'glasses') {
@@ -1039,7 +999,6 @@
           e.stopPropagation();
         });
       }
-
       if (glassesYPosSlider) {
         glassesYPosSlider.addEventListener('input', (e) => {
           if (activeElement === 'glasses') {
@@ -1051,7 +1010,6 @@
           e.stopPropagation();
         });
       }
-
       if (glassesScaleSlider) {
         glassesScaleSlider.addEventListener('input', (e) => {
           if (activeElement === 'glasses') {
@@ -1063,7 +1021,6 @@
           e.stopPropagation();
         });
       }
-
       if (glassesRotationSlider) {
         glassesRotationSlider.addEventListener('input', (e) => {
           if (activeElement === 'glasses') {
@@ -1075,19 +1032,16 @@
           e.stopPropagation();
         });
       }
-
       if (sendBackButton) {
         sendBackButton.addEventListener('click', () => {
           photoInFront = false;
         });
       }
-
       if (bringFrontButton) {
         bringFrontButton.addEventListener('click', () => {
           photoInFront = true;
         });
       }
-
       if (downloadButton) {
         downloadButton.addEventListener('click', () => {
           if (templateLoaded && photoLoaded && templateImg && photoImg) {
@@ -1172,7 +1126,6 @@
           }
         });
       }
-
       window.addEventListener('resize', () => {
         updateCanvasSize();
       });
